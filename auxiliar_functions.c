@@ -74,22 +74,6 @@ char *pathfinder(char *str)
 }
 
 /**
-  * _printenv - prints all environment variables.
-  *
-  */
-
-void _printenv(void)
-{
-	int i;
-
-	for (i = 0; environ[i] != NULL; i++)
-	{
-		write(1, environ[i], _strlen(environ[i]));
-		write(1, "\n", 1);
-	}
-}
-
-/**
   * _getenv - Get an environment variable value by its name.
   * @name: name of the environment variable to find.
   *
@@ -122,10 +106,10 @@ char *_getenv(const char *name)
   * Return: 0 if it works, -1 otherwise.
   */
 
-int executioner(char **argv)
+int executioner(char **argv, size_t *inputs)
 {
 	int status;
-	char *finder;
+	char *finder, *pathname, *ptr;
 	struct stat st;
 	pid_t child_pid;
 
@@ -137,6 +121,7 @@ int executioner(char **argv)
 		child_pid = fork();
 		if (child_pid == -1)
 			return (-1);
+		inputs++;
 		if (child_pid == 0)
 			execve(pathfinder(argv[0]), argv, environ);
 		free(argv);
@@ -144,8 +129,38 @@ int executioner(char **argv)
 	}
 	else
 	{
+		pathname = _getenv("_");
+		write(2, pathname, _strlen(pathname));
+		write(2, ": ", 2);
+		ptr = get_number(*inputs, 10);
+		write(2, ptr, strlen(ptr));
+		write(2, ": ", 2);
+		write(2, argv[0], _strlen(argv[0]));
+		write(2, ": not found\n", 12);
+
+		free(pathname - 2);
 		free(argv);
-		perror("./hsh");
 	}
 	return (0);
+}
+
+char *get_number(unsigned int num, int base)
+{
+
+	static char set[16] = "0123456789abcdef";
+	static char aux[64];
+	char *ptraux = NULL;
+	int remainder = 0;
+
+	ptraux = &aux[63];
+	*ptraux = '\0';
+	if (num == 0)
+		*--ptraux = '0';
+	for ( ; num; )
+	{
+		remainder = num % base;
+		*--ptraux = set[remainder];
+		num = num / base;
+	}
+	return (ptraux);
 }

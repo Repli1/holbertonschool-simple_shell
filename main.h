@@ -20,7 +20,8 @@ void _printenv(void);
 char *pathfinder(char *str);
 void *_realloc(void *ptr, size_t originalLength, size_t newLength);
 void _memcpy(void *dest, void *src, size_t n);
-int executioner(char **argv);
+int executioner(char **argv, size_t *inputs);
+char *get_number(unsigned int num, int base);
 extern char **environ;
 
 #endif
