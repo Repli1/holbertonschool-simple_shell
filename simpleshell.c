@@ -19,7 +19,7 @@ int main(void)
 		if (f == -1)
 		{
 			free(buf);
-			return (-1); }
+			return (0); }
 		if (_strcmp(buf, "\n") == 0)
 		{
 			free(buf), buf = NULL;
@@ -29,7 +29,7 @@ int main(void)
 		if (argv == NULL)
 		{
 			free(buf);
-			return (-1); }
+			return (0); }
 		dup = _strdup(buf), token = strtok(dup, " \t"), argv[0] = token;
 		if (argv[0] == NULL || token == NULL)
 		{
@@ -45,5 +45,5 @@ int main(void)
 			argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
 			argv[i] = token; }
 		argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
-		argv[i] = NULL, executioner(argv, inputptr), free(dup); }
+		argv[i] = NULL, executioner(argv, inputptr), free(dup); }	
 	return (0); }
