@@ -31,19 +31,19 @@ int main(void)
 			free(buf);
 			return (-1); }
 		dup = _strdup(buf), token = strtok(dup, " \t"), argv[0] = token;
-		if (argv[0] == NULL)
+		if (argv[0] == NULL || token == NULL)
+		{
 			free(argv), free(dup);
+			continue; }
 		if (_strcmp(argv[0], "exit") == 0)
 		{
 			free(argv), free(dup), free(buf);
 			return (0); }
-		else
+		for (i = 1; token; i++)
 		{
-			for (i = 1; token; i++)
-			{
-				token = strtok(NULL, " \t");
-				argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
-				argv[i] = token; }
+			token = strtok(NULL, " \t");
 			argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
-			argv[i] = NULL, executioner(argv, inputptr), free(dup); } }
+			argv[i] = token; }
+		argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
+		argv[i] = NULL, executioner(argv, inputptr), free(dup); }
 	return (0); }

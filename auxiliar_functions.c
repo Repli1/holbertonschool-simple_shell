@@ -102,6 +102,7 @@ char *_getenv(const char *name)
 /**
   * executioner - executes the given command or prints error in other case.
   * @argv: Array of strings with the input given.
+  * @inputs: Pointer to the counter of lines passed.
   *
   * Return: 0 if it works, -1 otherwise.
   */
@@ -143,6 +144,18 @@ int executioner(char **argv, size_t *inputs)
 	}
 	return (0);
 }
+
+/**
+  * get_number - converts a given number to its value in its base.
+  * @num: Given number.
+  * @base: Base of the given number.
+  *
+  * Description: Receives an unsigned integer and saves its value in a given
+  * base inside a string. Do that by iterating through each digit of the
+  * number, dividing each by its base and filling the string with the
+  * remainder of each division.
+  * Return: Pointer to the array of characters where the converted number is.
+  */
 
 char *get_number(unsigned int num, int base)
 {
