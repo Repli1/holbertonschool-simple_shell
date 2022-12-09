@@ -45,5 +45,5 @@ int main(void)
 			argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
 			argv[i] = token; }
 		argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
-		argv[i] = NULL, executioner(argv, inputptr), free(dup); }	
+		argv[i] = NULL, executioner(argv, inputptr), free(dup); }
 	return (0); }
