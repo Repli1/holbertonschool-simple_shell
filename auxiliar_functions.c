@@ -132,6 +132,7 @@ int executioner(char **argv, size_t *inputs)
 	{
 		fprintf(stderr, "%s: %ld: %s: not found\n", _getenv("_"), *inputs, argv[0]);
 		free(argv);
+		return (127);
 	}
 	return (0);
 }

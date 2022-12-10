@@ -10,6 +10,7 @@ int main(void)
 {
 	size_t count = 0, i, inputs = 1, *inputptr = &inputs;
 	ssize_t f;
+	int status = 0;
 	char *buf = NULL, *token, *dup, **argv;
 
 	for (; 1; inputs++)
@@ -38,12 +39,12 @@ int main(void)
 		if (_strcmp(argv[0], "exit") == 0)
 		{
 			free(argv), free(dup), free(buf);
-			exit(errno); }
+			exit(status); }
 		for (i = 1; token; i++)
 		{
 			token = strtok(NULL, " \t");
 			argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
 			argv[i] = token; }
 		argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
-		argv[i] = NULL, executioner(argv, inputptr), free(dup); }
+		argv[i] = NULL, status = executioner(argv, inputptr), free(dup); }
 	return (0); }
