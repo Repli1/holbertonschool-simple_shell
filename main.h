@@ -8,7 +8,6 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <errno.h>
 
 char *_strcat(char *dest, char *src);
 int _strlen(char *s);

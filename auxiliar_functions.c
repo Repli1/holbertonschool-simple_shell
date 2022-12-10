@@ -110,7 +110,7 @@ char *_getenv(const char *name)
 int executioner(char **argv, size_t *inputs)
 {
 	int status;
-	char *finder;
+	char *finder, *pathname;
 	struct stat st;
 	pid_t child_pid;
 
@@ -130,9 +130,23 @@ int executioner(char **argv, size_t *inputs)
 	}
 	else
 	{
-		fprintf(stderr, "%s: %ld: %s: not found\n", _getenv("_"), *inputs, argv[0]);
-		free(argv);
+		pathname = _getenv("_");
+		fprintf(stderr, "%s: %ld: %s: not found\n", pathname, *inputs, argv[0]);
+		free(argv), free(pathname - 2);
 		return (127);
 	}
 	return (0);
+}
+
+/**
+  * _printenv - prints all environment variables.
+  *
+  */
+
+void _printenv(void)
+{
+	int i;
+
+	for (i = 0; environ[i]; i++)
+		printf("%s\n", environ[i]);
 }

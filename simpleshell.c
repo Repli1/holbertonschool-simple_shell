@@ -8,15 +8,14 @@
 
 int main(void)
 {
-	size_t count = 0, i, inputs = 1, *inputptr = &inputs;
+	size_t bufsize = 0, i, inputs = 1, *inputptr = &inputs, status = 0;
 	ssize_t f;
-	int status = 0;
 	char *buf = NULL, *token, *dup, **argv;
 
 	for (; 1; inputs++)
 	{
 		isatty(STDIN_FILENO) == 1 ? write(1, "$ ", 2) : 0;
-		f = getline(&buf, &count, stdin);
+		f = getline(&buf, &bufsize, stdin);
 		if (f == -1)
 		{
 			free(buf);
@@ -25,8 +24,7 @@ int main(void)
 		{
 			free(buf), buf = NULL;
 			continue; }
-		buf[f - 1] = '\0';
-		argv = malloc(sizeof(char *));
+		buf[f - 1] = '\0', argv = malloc(sizeof(char *));
 		if (argv == NULL)
 		{
 			free(buf);
@@ -36,15 +34,18 @@ int main(void)
 		{
 			free(argv), free(dup);
 			continue; }
-		if (_strcmp(argv[0], "exit") == 0)
-		{
-			free(argv), free(dup), free(buf);
-			exit(status); }
 		for (i = 1; token; i++)
 		{
 			token = strtok(NULL, " \t");
 			argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
 			argv[i] = token; }
 		argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
-		argv[i] = NULL, status = executioner(argv, inputptr), free(dup); }
+		argv[i] = NULL;
+		if (_strcmp(argv[0], "env") == 0 && !argv[1])
+		{
+			free(argv), free(dup), _printenv();
+			continue; }
+		if (_strcmp(argv[0], "exit") == 0 && !argv[1])
+			free(argv), free(dup), free(buf), exit(status);
+		status = executioner(argv, inputptr), free(dup); }
 	return (0); }
