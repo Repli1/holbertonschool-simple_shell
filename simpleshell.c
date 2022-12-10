@@ -38,7 +38,7 @@ int main(void)
 		if (_strcmp(argv[0], "exit") == 0)
 		{
 			free(argv), free(dup), free(buf);
-			exit(0); }
+			exit(errno); }
 		for (i = 1; token; i++)
 		{
 			token = strtok(NULL, " \t");
