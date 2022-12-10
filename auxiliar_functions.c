@@ -110,7 +110,7 @@ char *_getenv(const char *name)
 int executioner(char **argv, size_t *inputs)
 {
 	int status;
-	char *finder, *pathname, *ptr;
+	char *finder;
 	struct stat st;
 	pid_t child_pid;
 
@@ -130,50 +130,8 @@ int executioner(char **argv, size_t *inputs)
 	}
 	else
 	{
-		pathname = _getenv("_");
-		write(2, pathname, _strlen(pathname));
-		write(2, ": ", 2);
-		ptr = get_number(*inputs, 10);
-		write(2, ptr, strlen(ptr));
-		write(2, ": ", 2);
-		write(2, argv[0], _strlen(argv[0]));
-		write(2, ": not found\n", 12);
-
-		free(pathname - 2);
+		fprintf(stderr, "%s: %ld: %s: not found\n", _getenv("_"), *inputs, argv[0]);
 		free(argv);
 	}
 	return (0);
-}
-
-/**
-  * get_number - converts a given number to its value in its base.
-  * @num: Given number.
-  * @base: Base of the given number.
-  *
-  * Description: Receives an unsigned integer and saves its value in a given
-  * base inside a string. Do that by iterating through each digit of the
-  * number, dividing each by its base and filling the string with the
-  * remainder of each division.
-  * Return: Pointer to the array of characters where the converted number is.
-  */
-
-char *get_number(unsigned int num, int base)
-{
-
-	static char set[16] = "0123456789abcdef";
-	static char aux[64];
-	char *ptraux = NULL;
-	int remainder = 0;
-
-	ptraux = &aux[63];
-	*ptraux = '\0';
-	if (num == 0)
-		*--ptraux = '0';
-	for ( ; num; )
-	{
-		remainder = num % base;
-		*--ptraux = set[remainder];
-		num = num / base;
-	}
-	return (ptraux);
 }
