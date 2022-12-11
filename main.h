@@ -9,19 +9,24 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+/* String functions */
+
 char *_strcat(char *dest, char *src);
 int _strlen(char *s);
 int _strcmp(const char *s1, const char *s2);
 char *_strdup(char *str);
+void _memcpy(void *dest, void *src, size_t n);
+
+/* Auxiliar functions */
+
 void _printenv(void);
 char *pathfinder(char *str);
 char *_getenv(const char *name);
-void _printenv(void);
-char *pathfinder(char *str);
 void *_realloc(void *ptr, size_t originalLength, size_t newLength);
-void _memcpy(void *dest, void *src, size_t n);
-int executioner(char **argv, size_t *inputs);
-char *get_number(unsigned int num, int base);
+int executor(char **argv, size_t *inputs);
+
+/* Declaration of environ */
+
 extern char **environ;
 
 #endif

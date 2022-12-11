@@ -12,40 +12,40 @@ int main(void)
 	ssize_t f;
 	char *buf = NULL, *token, *dup, **argv;
 
-	for (; 1; inputs++)
+	for (; 1; inputs++) /* Infinite loop which counts input lines */
 	{
 		isatty(STDIN_FILENO) == 1 ? write(1, "$ ", 2) : 0;
-		f = getline(&buf, &bufsize, stdin);
+		f = getline(&buf, &bufsize, stdin); /* user input line */
 		if (f == -1)
 		{
 			free(buf);
 			return (0); }
-		if (_strcmp(buf, "\n") == 0)
+		if (_strcmp(buf, "\n") == 0) /* if only newline is passed */
 		{
 			free(buf), buf = NULL;
 			continue; }
-		buf[f - 1] = '\0', argv = malloc(sizeof(char *));
+		buf[f - 1] = '\0', argv = malloc(sizeof(char *)); /* replaces \n for \0 */
 		if (argv == NULL)
 		{
 			free(buf);
 			return (0); }
 		dup = _strdup(buf), token = strtok(dup, " \t"), argv[0] = token;
-		if (argv[0] == NULL || token == NULL)
+		if (argv[0] == NULL || token == NULL) /* Above tokenize the first argument */
 		{
 			free(argv), free(dup);
 			continue; }
-		for (i = 1; token; i++)
-		{
+		for (i = 1; token; i++) /* Continues to tokenize */
+		{ /* Each token is part of the line using space or tab as delimiters */
 			token = strtok(NULL, " \t");
 			argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
 			argv[i] = token; }
 		argv = _realloc(argv, i * sizeof(char *), (i + 1) * sizeof(char *));
 		argv[i] = NULL;
-		if (_strcmp(argv[0], "env") == 0 && !argv[1])
+		if (_strcmp(argv[0], "env") == 0 && !argv[1]) /* env built-in */
 		{
 			free(argv), free(dup), _printenv();
 			continue; }
-		if (_strcmp(argv[0], "exit") == 0 && !argv[1])
+		if (_strcmp(argv[0], "exit") == 0 && !argv[1]) /* exit built-in */
 			free(argv), free(dup), free(buf), exit(status);
-		status = executioner(argv, inputptr), free(dup); }
-	return (0); }
+		status = executor(argv, inputptr), free(dup); } /* Execute command */
+	return (0); } /* or prints error message if not found */

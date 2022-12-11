@@ -49,27 +49,30 @@ void *_realloc(void *ptr, size_t oldSize, size_t newSize)
 
 char *pathfinder(char *str)
 {
-	char *p = _getenv("PATH"), *dup2 = _strdup(p);
-	char *token = strtok(dup2, ":"), *dup = NULL;
+	char *PATHvalue = _getenv("PATH"), *PATHdup = _strdup(PATHvalue);
+	char *token = strtok(PATHdup, ":"), *dup = NULL;
 	struct stat st;
 
-	free(p - 5);
-	while (token)
+	free(PATHvalue - 5); /* _getenv moved the pointer five blocks in the */
+			/* allocated memory, so we subtract that five */
+	while (token) /* Each token is a part of the value of PATH using ':' as a */
+		/* delimiter */
 	{
 		dup = _strdup(token);
 		dup = _realloc(dup, _strlen(dup) + 1, _strlen(dup) + 2);
 		_strcat(dup, "/");
 		dup = _realloc(dup, _strlen(dup) + 1, _strlen(dup) + 1 + _strlen(str));
-		_strcat(dup, str);
-		if (stat(dup, &st) == 0)
+		_strcat(dup, str); /* With duplicates, we concatenate the value with the */
+		/* str given */
+		if (stat(dup, &st) == 0) /* Check if the command is found */
 		{
-			free(dup2);
+			free(PATHdup);
 			return (dup);
 		}
 		token = strtok(NULL, ":");
 		free(dup);
 	}
-	free(dup2);
+	free(PATHdup);
 	return (str);
 }
 
@@ -100,14 +103,14 @@ char *_getenv(const char *name)
 }
 
 /**
-  * executioner - executes the given command or prints error in other case.
+  * executor - executes the given command or prints error in other case.
   * @argv: Array of strings with the input given.
   * @inputs: Pointer to the counter of lines passed.
   *
   * Return: 0 if it works, -1 otherwise.
   */
 
-int executioner(char **argv, size_t *inputs)
+int executor(char **argv, size_t *inputs)
 {
 	int status;
 	char *finder, *pathname;
@@ -115,11 +118,11 @@ int executioner(char **argv, size_t *inputs)
 	pid_t child_pid;
 
 	finder = pathfinder(argv[0]);
-	if (stat(finder, &st) == 0)
+	if (stat(finder, &st) == 0) /* Check if the command exists */
 	{
-		if (_strcmp(finder, argv[0]) != 0)
+		if (_strcmp(finder, argv[0]) != 0) /* Checks if pathfinder changes the str */
 			free(finder);
-		child_pid = fork();
+		child_pid = fork(); /* Child process to execve */
 		if (child_pid == -1)
 			return (0);
 		inputs++;
@@ -128,12 +131,14 @@ int executioner(char **argv, size_t *inputs)
 		free(argv);
 		wait(&status);
 	}
-	else
+	else /* if command not found */
 	{
-		pathname = _getenv("_");
+		pathname = _getenv("_"); /* The current executing program, our shell */
 		fprintf(stderr, "%s: %ld: %s: not found\n", pathname, *inputs, argv[0]);
+		/* The error message depends on the _ environment variable, the number of */
+		/* input lines given thus far, and the not found command */
 		free(argv), free(pathname - 2);
-		return (127);
+		return (127); /* 127 is the status code for exit when command not found */
 	}
 	return (0);
 }
