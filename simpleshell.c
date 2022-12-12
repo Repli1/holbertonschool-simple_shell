@@ -19,7 +19,7 @@ int main(void)
 		if (f == -1)
 		{
 			free(buf);
-			return (0); }
+			return (status); }
 		if (_strcmp(buf, "\n") == 0) /* if only newline is passed */
 		{
 			free(buf), buf = NULL;
@@ -28,7 +28,7 @@ int main(void)
 		if (argv == NULL)
 		{
 			free(buf);
-			return (0); }
+			return (status); }
 		dup = _strdup(buf), token = strtok(dup, " \t"), argv[0] = token;
 		if (argv[0] == NULL || token == NULL) /* Above tokenize the first argument */
 		{
@@ -48,4 +48,4 @@ int main(void)
 		if (_strcmp(argv[0], "exit") == 0 && !argv[1]) /* exit built-in */
 			free(argv), free(dup), free(buf), exit(status);
 		status = executor(argv, inputptr), free(dup); } /* Execute command */
-	return (0); } /* or prints error message if not found */
+	return (status); } /* or prints error message if not found */
