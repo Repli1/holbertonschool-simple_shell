@@ -50,11 +50,15 @@ void *_realloc(void *ptr, size_t oldSize, size_t newSize)
 char *pathfinder(char *str)
 {
 	char *PATHvalue = _getenv("PATH"), *PATHdup = _strdup(PATHvalue);
-	char *token = strtok(PATHdup, ":"), *dup = NULL;
+	char *token, *dup = NULL;
 	struct stat st;
 
 	if (PATHvalue != NULL)
-		free(PATHvalue - 5); /* _getenv moved the pointer five blocks in the */
+		free(PATHvalue - 5);
+	else
+		return (str);
+	token = strtok(PATHdup, ":");
+	 /* _getenv moved the pointer five blocks in the */
 			/* allocated memory, so we subtract that five */
 	while (token) /* Each token is a part of the value of PATH using ':' as a */
 		/* delimiter */
@@ -95,6 +99,11 @@ char *_getenv(const char *name)
 		strtok(dup, "=");
 		if (_strcmp(dup, name) == 0)
 		{
+			if (*(dup + 5) == '\0')
+			{
+				free(dup);
+				return (NULL);
+			}
 			dup = strtok(NULL, "=");
 			return (dup);
 		}
@@ -115,12 +124,19 @@ int executor(char **argv, size_t *inputs)
 {
 	char *finder;
 	struct stat st;
+	DIR *d = opendir(".");
 
-	if (stat(argv[0], &st) == 0)
-		return (forker(argv[0], argv, inputs));
-	finder = pathfinder(argv[0]);
-	if (stat(finder, &st) == 0) /* Check if the command exists */
-		return (forker(finder, argv, inputs));
+	if (find_file(argv[0], d) != 0)
+	{
+		closedir(d);
+		if (stat(argv[0], &st) == 0)
+			return (forker(argv[0], argv, inputs));
+		finder = pathfinder(argv[0]);
+		if (stat(finder, &st) == 0) /* Check if the command exists */
+			return (forker(finder, argv, inputs));
+	}
+	else
+		closedir(d);
 	/* if command not found */
 	fprintf(stderr, "./hsh: %ld: %s: not found\n", *inputs, argv[0]);
 	/* The error message depends on the number of */
