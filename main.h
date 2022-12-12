@@ -1,6 +1,7 @@
 #ifndef main_h
 #define main_h
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -24,6 +25,7 @@ char *pathfinder(char *str);
 char *_getenv(const char *name);
 void *_realloc(void *ptr, size_t originalLength, size_t newLength);
 int executor(char **argv, size_t *inputs);
+int forker(char *finder, char **argv, size_t *inputs);
 
 /* Declaration of environ */
 

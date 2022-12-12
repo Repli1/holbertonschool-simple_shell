@@ -53,7 +53,8 @@ char *pathfinder(char *str)
 	char *token = strtok(PATHdup, ":"), *dup = NULL;
 	struct stat st;
 
-	free(PATHvalue - 5); /* _getenv moved the pointer five blocks in the */
+	if (PATHvalue != NULL)
+		free(PATHvalue - 5); /* _getenv moved the pointer five blocks in the */
 			/* allocated memory, so we subtract that five */
 	while (token) /* Each token is a part of the value of PATH using ':' as a */
 		/* delimiter */
@@ -112,35 +113,20 @@ char *_getenv(const char *name)
 
 int executor(char **argv, size_t *inputs)
 {
-	int status;
-	char *finder, *pathname;
+	char *finder;
 	struct stat st;
-	pid_t child_pid;
 
+	if (stat(argv[0], &st) == 0)
+		return (forker(argv[0], argv, inputs));
 	finder = pathfinder(argv[0]);
 	if (stat(finder, &st) == 0) /* Check if the command exists */
-	{
-		if (_strcmp(finder, argv[0]) != 0) /* Checks if pathfinder changes the str */
-			free(finder);
-		child_pid = fork(); /* Child process to execve */
-		if (child_pid == -1)
-			return (0);
-		inputs++;
-		if (child_pid == 0)
-			execve(pathfinder(argv[0]), argv, environ);
-		free(argv);
-		wait(&status);
-	}
-	else /* if command not found */
-	{
-		pathname = _getenv("_"); /* The current executing program, our shell */
-		fprintf(stderr, "%s: %ld: %s: not found\n", pathname, *inputs, argv[0]);
-		/* The error message depends on the _ environment variable, the number of */
-		/* input lines given thus far, and the not found command */
-		free(argv), free(pathname - 2);
-		return (127); /* 127 is the status code for exit when command not found */
-	}
-	return (0);
+		return (forker(finder, argv, inputs));
+	/* if command not found */
+	fprintf(stderr, "./hsh: %ld: %s: not found\n", *inputs, argv[0]);
+	/* The error message depends on the number of */
+	/* input lines given thus far, and the not found command */
+	free(argv);
+	return (127); /* 127 is the status code for exit when command not found */
 }
 
 /**
